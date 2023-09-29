@@ -44,7 +44,7 @@ $result = mysqli_query($conn, $sql);
                 echo '<div class="card mb-3" style="max-width: 400px;">
                         <div class="row g-0">
                             <div class="col-md-4">
-                                <img src="project/Admin/'. $row['product_image'] . '" alt="' . $row['product_name'] . '" class="img-fluid">
+                                <img src="'. $row['product_image'] . '" alt="' . $row['product_name'] . '" class="img-fluid">
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
