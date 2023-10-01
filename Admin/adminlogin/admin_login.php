@@ -5,7 +5,7 @@ $showError = false;
 //checking if the method is post 
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     //if method is post connect to database
-    include '../components/_dbconnect.php';
+    require '../components/_dbconnect.php';
 
     $username = $_POST["user_name"];
     $password = $_POST["password"];
@@ -26,7 +26,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 $_SESSION['loggedin'] =true;
                 $_SESSION['user_name'] = $username;
             
-                header("location:/Admin/home.php");
+                header("location:../home.php");
             } 
           
             else{
@@ -38,6 +38,8 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     else{
         $showError = "Invalid username ";
     }
+    // Close the database connection here
+mysqli_close($conn);
 }
     
 ?>
@@ -49,13 +51,15 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-
+     <!-- css  -->
+     <link rel="stylesheet" href="../css/login.css" />
+    <link rel="stylesheet" href="../css/util.css" />
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
    </head>
 
-   <body>
+   <body class="bg-dark">
       <?php
          if($showError){
                   echo '<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -73,22 +77,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                       }
       ?>
     <!-- login form  -->
-    <div class="container">
-        <h1 class="display-2">Login</h1>
+    <div class=" mt-5 l_con">
+        <h1 class="mt-5 f_title">Login</h1>
         <form action="" name="login" method="post" class="mt-2">
-            <div class="mb-3">
-                <label for="user_name" class="form-label">UserName</label>
-                <input type="text" class="form-control" id="user_name" name="user_name">
+            <div class="mb-3 text-start fw-bold">
+                <label for="user_name" class=" form-label">UserName</label>
+                <input type="text" class="in" id="user_name" name="user_name">
             </div>
-            <div class="mb-3">
+            <div class="mb-3 text-start fw-bold">
                 <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password">
+                <input type="password" class="in" id="password" name="password">
             </div>
 
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="button button-primary">Submit</button>
             <div>
                 <p class="mt-3">
-                    Don't have an account yet? <a href="admin_signup.php" class="form-label">Create one</a>
+                    Don't have an account yet? <a href="admin_signup.php" class="link">Create one</a>
                 </p>
             </div>
         </form>

@@ -3,25 +3,38 @@ session_start();
 
 $showAlert = false;
 
-// Check if the user is logged in
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
-    header("location: /loginsystem/login.php");
-    exit;
-}
-
 // Include the database connection
 require 'components/_dbconnect.php';
 
-// Handle review submission
+// Fetch existing reviews from the database
+$reviews = array();
+
+$sql = "SELECT * FROM reviews ORDER BY submission_date DESC"; // Modify this query according to your database schema
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $reviews[] = $row;
+    }
+}
+
+// Check if the user is logged in
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $review_title = $_POST['review_title'];
+    if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
+        // User is not logged in, you can display a message or redirect them to the login page
+
+        header("location: loginsystem/login.php");
+        exit;
+    }
+
+    // Handle review submission
     $review_content = $_POST['review_content'];
 
     // Get the user's ID from the session
     $user_name = $_SESSION['username']; // Assuming you store the user ID in the session
 
-    // Fetch the user's full name from the "user's_info" table
-    $sql = "SELECT user_id, full_name FROM `user's_info` WHERE username = ?";
+    // Fetch the user's full name from the "users_info" table
+    $sql = "SELECT user_id, full_name FROM `users_info` WHERE username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $user_name);
 
@@ -32,10 +45,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $full_name = $user_info['full_name'];
             $user_id = $user_info['user_id'];
             // Insert the review into the database
-            $sql = "INSERT INTO reviews (user_id, full_name, review_title, review_content, submission_date) VALUES (?, ?, ?, ?, NOW())";
+            $sql = "INSERT INTO reviews (user_id, full_name, review_content, submission_date) VALUES (?, ?,  ?, NOW())";
 
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("isss", $user_id, $full_name, $review_title, $review_content);
+            $stmt->bind_param("iss", $user_id, $full_name, $review_content);
 
             if ($stmt->execute()) {
                 $showAlert = true;
@@ -52,18 +65,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         echo "Statement execution failed: " . $stmt->error;
         exit;
-    }
-}
-
-// Fetch existing reviews from the database
-$reviews = array();
-
-$sql = "SELECT * FROM reviews ORDER BY submission_date DESC"; // Modify this query according to your database schema
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $reviews[] = $row;
     }
 }
 
@@ -104,14 +105,16 @@ $conn->close();
         }
         ?>
     <!-- Display Existing Reviews -->
-    <div class="container mt-5">
-        <h2>Existing Reviews</h2>
-        <ul class="list-group">
+    <div class="container mt-2">
+        <h2>Customer Reviews</h2>
+        <ul class="">
             <?php foreach ($reviews as $review): ?>
-                <li class="list-group-item">
-                    <h4><?php echo $review['review_title']; ?></h4>
-                    <p><?php echo $review['review_content']; ?></p>
-                    <small>Posted by: <?php echo $review['full_name']; ?></small>
+                <li class=" list-group-item fw-normal">
+                 <b><?php echo $review['full_name']; ?></b> | <b><?php echo $review['submission_date']; ?></b>
+                    <p class="mt-1 mb-1"><?php echo $review['review_content']; ?></p>
+                    <p class="mt-0"> 
+
+                    
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -119,18 +122,14 @@ $conn->close();
 
     <!-- Review Form -->
     <div class="container mt-5">
-        <h2>Write a Review</h2>
+        <h2>Share Your Experience</h2>
        
         <form action="reviews.php" method="POST">
+           
             <div class="form-group">
-                <label for="review_title">Review Title:</label>
-                <input type="text" class="form-control" id="review_title" name="review_title" required>
+                <textarea class="form-control" id="review_content" name="review_content" rows="4" placeholder="please share your experience " required></textarea >
             </div>
-            <div class="form-group">
-                <label for="review_content">Review Content:</label>
-                <textarea class="form-control" id="review_content" name="review_content" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit Review</button>
+            <button type="submit" class="btn btn-primary mt-2">Post</button>
         </form>
     </div>
 

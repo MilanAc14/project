@@ -9,11 +9,11 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
 // Include the database connection
 require '../components/_dbconnect.php';
 
-if (isset($_GET['user_id'])) {
-    $review_id = $_GET['user_id'];
+if (isset($_GET['review_id'])) {
+    $review_id = $_GET['review_id'];
 
     // Delete the review from the database
-    $sql = "DELETE FROM reviews WHERE user_id = ?";
+    $sql = "DELETE FROM reviews WHERE review_id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $review_id);
 

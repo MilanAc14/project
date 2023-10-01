@@ -11,7 +11,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $password = $_POST["password"];
 
     //query to fetch user data 
-    $sql = "Select * from `user's_info` where username='$username'";
+    $sql = "Select * from `users_info` where username='$username'";
     $result = mysqli_query($conn, $sql);
     //checking number of rows of the email although it will be one if exists otherwise 0 as no duplicate entry is alowed and email is set unique
 
@@ -24,8 +24,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                 session_start();
         
                 $_SESSION['loggedin'] = true;
+                $_SESSION['user_id'] = $row['user_id'];
                 $_SESSION['username']= $username;
-            
+               
+                
                 header("location: /project/User/home.php");
             } 
           

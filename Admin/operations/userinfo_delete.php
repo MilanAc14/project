@@ -14,7 +14,7 @@ if (isset($_GET['user_id'])) {
 
     // You should add validation and security checks here to prevent SQL injection
 
-    $sql = "DELETE FROM `user's_info` WHERE user_id = '$user_id'";
+    $sql = "DELETE FROM `users_info` WHERE user_id = '$user_id'";
 
     if (mysqli_query($conn, $sql)) {
         $_SESSION['deletion_success'] = true;

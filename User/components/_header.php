@@ -10,7 +10,7 @@ else{
 
 echo'<nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
-        <a class="navbar-brand" href="./user/home.php">shoes</a>
+        <a class="navbar-brand" href="home.php">shoes</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -21,7 +21,7 @@ echo'<nav class="navbar navbar-expand-lg bg-light">
                     <a class="nav-link active" aria-current="page" href="home.php">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
+                    <a class="nav-link" href="about.php">About</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -29,10 +29,10 @@ echo'<nav class="navbar navbar-expand-lg bg-light">
                         category
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="./categories/mens.php">mens</a></li>
-                        <li><a class="dropdown-item" href="#">womens</a></li>
+                        <li><a class="dropdown-item" href="categories/mens.php">mens</a></li>
+                        <li><a class="dropdown-item" href="categories/womens.php">womens</a></li>
 
-                        <li><a class="dropdown-item" href="#">kids</a></li>
+                        <li><a class="dropdown-item" href="categories/kids.php">kids</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
@@ -50,21 +50,21 @@ echo'<nav class="navbar navbar-expand-lg bg-light">
 
            echo' <ul class="navbar-nav me-3 ms-3">
                 <li class="nav-item  navbar-nav me-3 ms-3">
-                    <a class="nav-link" href="/project/loginsystem/login.php">login</a>
+                    <a class="nav-link" href="loginsystem/login.php">login</a>
                 </li>
                 <li class="nav-item navbar-nav me-3 ms-3">
-                    <a class="nav-link" href="/project/loginsystem/signup.php">signup</a>
+                    <a class="nav-link" href="loginsystem/signup.php">signup</a>
                 </li>';
             }
             if($loggedin){
                 //display the name of user if logged in 
                 echo $_SESSION['username'];
                 echo ' <li class="nav-item navbar-nav me-3 ms-3">
-                    <a class="nav-link" href="/project/loginsystem/logout.php">logout</a>
+                    <a class="nav-link" href="loginsystem/logout.php">logout</a>
                 </li>';
                 };
                 echo'<li class="nav-item navbar-nav me-3 ms-3">
-                    <a class="nav-link" href="#">Cart</a>
+                    <a class="nav-link" href="cart.php">Cart</a>
                 </li>
             </ul>
 

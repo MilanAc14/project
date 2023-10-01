@@ -1,9 +1,9 @@
 <?php
-$showAlert = false;
+
 $showError = false;
 if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-    include '../components/_dbconnect.php';
+    require '../components/_dbconnect.php';
 
     $fullname = $_POST["full_name"];
     $email = $_POST["email"];
@@ -26,14 +26,25 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             $hash = password_hash($password, PASSWORD_DEFAULT);
             $sql = "INSERT INTO `admin_info` (`full_name`, `email`, `user_name`, `password`, `timestamp`) VALUES ('$fullname', '$email', '$username', '$hash', current_timestamp())";
             $result = mysqli_query($conn, $sql);
-            if ($result){
-                $showAlert = true;
+            if ($result) {
+                echo '<script>
+                        var showAlert = true;
+                        setTimeout(function(){
+                            if (showAlert) {
+                                alert("Registration successful!");
+                                showAlert = false;
+                                window.location.href = "admin_login.php";
+                            }
+                        }, 3000); // 3000 milliseconds = 3 seconds
+                      </script>';
             }
         }
         else{
             $showError = "Passwords do not match";
         }
     }
+    // Close the database connection here
+mysqli_close($conn);
 }
     
 ?>
@@ -45,29 +56,18 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>signup</title>
+      <!-- css  -->
+      <link rel="stylesheet" href="../css/login.css" />
+    <link rel="stylesheet" href="../css/util.css" />
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
 
-<body>
+<body class="bg-dark">
     <?php
     
-        if($showAlert){
-             echo ' <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                    </symbol>
-                    </svg>
-                    <div class="alert alert-success d-flex align-items-center" role="alert">
-                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
-                    <div>
-                    <strong>Success!</strong> Your account is now created and you can login <a  href="admin_login.php">login </a>
-                    </div> 
-                    <button type="button" class="btn-close b" data-bs-dismiss="alert"  aria-label="Close"></button>
-                    </div> ';
-                }
      if($showError){
                 echo '<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
                 <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
@@ -84,33 +84,33 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
              }
     ?>
     <!-- login form  -->
-    <div class="container my-5">
-        <h1 class="display-2">Signup</h1>
+    <div class="mt-5 l_con my-5">
+        <h1 class=" mt-2 mb-2 f_title">Signup</h1>
         <form action="" name="signUp" method="post" class="mt-2">
-            <div class="mb-3">
-                <label for="full_name" class="form-label">full Name</label>
-                <input type="text" class="form-control" id="full_name" name="full_name">
+            <div class="mb-3 text-start fw-bold">
+                <label for="full_name" class="text-uppercase form-label">full Name</label>
+                <input type="text" class="in" id="full_name" name="full_name" placeholder="Full Name">
             </div>
-            <div class="mb-3">
-                <label for="email" class="form-label">E-mail</label>
-                <input type="email" class="form-control" id="email" name="email">
+            <div class="mb-3 text-start fw-bold">
+                <label for="email" class="text-uppercase form-label">E-mail</label>
+                <input type="email" class="in" id="email" name="email"placeholder="Email">
             </div>
-            <div class="mb-3">
-                <label for="user_name" class="form-label">UserName</label>
-                <input type="text" class="form-control" id="user_name" name="user_name">
+            <div class="mb-3 text-start fw-bold">
+                <label for="user_name" class="text-uppercase form-label">UserName</label>
+                <input type="text" class="in" id="user_name" name="user_name" placeholder="Username">
             </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="password" name="password">
+            <div class="mb-3 text-start fw-bold">
+                <label for="password" class=" text-uppercase form-label">Password</label>
+                <input type="password" class="in" id="password" name="password" placeholder="Password">
             </div>
-            <div class="mb-3">
-                <label for="confirm_password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="confirm_password" name="confirm_password">
+            <div class="mb-3 text-start fw-bold">
+                <label for="confirm_password" class="text-uppercase form-label"> Confirm Password</label>
+                <input type="password" class="in" id="confirm_password" name="confirm_password" placeholder="Confirm password">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="button button-primary">Submit</button>
             <div>
                 <p class="mt-3">
-                    Already have an account <a href="admin_login.php" class="form-label">Login</a>
+                    Already have an account? <a href="admin_login.php" class="link">Login</a>
                 </p>
             </div>
         </form>

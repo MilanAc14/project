@@ -13,7 +13,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     
 
     // Check whether this e-mail exists
-    $existSql = "SELECT * FROM `user's_info` WHERE email = '$email'";
+    $existSql = "SELECT * FROM `users_info` WHERE email = '$email'";
     $result = mysqli_query($conn, $existSql);
     $numExistRows = mysqli_num_rows($result);
     if($numExistRows > 0){
@@ -24,7 +24,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
        
         if(($password == $cpassword)){
             $hash = password_hash($password, PASSWORD_DEFAULT);
-            $sql = "INSERT INTO `user's_info` ( `full_name`, `email`,`username`, `password`, `date`) VALUES ( '$fullname' , '$email' ,'$username', '$hash' ,current_timestamp())";
+            $sql = "INSERT INTO `users_info` ( `full_name`, `email`,`username`, `password`, `date`) VALUES ( '$fullname' , '$email' ,'$username', '$hash' ,current_timestamp())";
             $result = mysqli_query($conn, $sql);
             if ($result){
                 $showAlert = true;

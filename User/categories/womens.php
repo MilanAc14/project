@@ -1,12 +1,5 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != true) {
-    header("location: /adminlogin/admin_login.php");
-    exit;
-}
-
-include '../components/_dbconnect.php';
+require '../components/_dbconnect.php';
 
 // Define the product category you want to retrieve (in this case, category 3)
 $productCategory = 2;
@@ -39,6 +32,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products - Category 3</title>
     <link rel="stylesheet" href="../css/footer.css">
+    <!-- Link to your custom CSS file -->
+    <link rel="stylesheet" href="../css/product.css">
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
@@ -48,19 +43,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- Navigation bar -->
     <?php require '../components/_header.php'?>
 
-    <h1 class="display-2">Products - Category 3</h1>
-    <div class="container">
+    <h1 class="tittle mt-4 mb-4">Products - Category 3</h1>
+    <div class="con">
         <?php
         if (mysqli_num_rows($result) > 0) {
+            $productsPerRow = 3; // Define the number of products per row
+            $productCount = 0;
+
             while ($row = mysqli_fetch_assoc($result)) {
-                echo '<div class="card mb-3" style="max-width: 400px;">
+                if ($productCount % $productsPerRow == 0) {
+                    // Start a new row
+                    echo '<div class="row">';
+                }
+
+                echo '<div class="card col-md-4 mb-3" style="max-width: 400px;">
                         <div class="row g-0">
                             <div class="col-md-4">
                                 <img src="../../admin/' . $row['product_image'] . '" alt="' . $row['product_name'] . '" class="img-fluid">
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    <h5 class="card-title">' . $row['product_name'] . '</h5>
+                                    <h5 class="p_title mt-4">' . $row['product_name'] . '</h5>
                                     <p class="card-text">Category: ' . $row['product_category'] . '</p>
                                     <p class="card-text">Price: ' . $row['product_price'] . ' rupees</p>
                                     <p class="card-text">Description: ' . $row['product_description'] . '</p>
@@ -73,6 +76,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </div>
                         </div>
                     </div>';
+
+                $productCount++;
+
+                if ($productCount % $productsPerRow == 0) {
+                    // Close the row
+                    echo '</div>';
+                }
+            }
+
+            // Close the last row if it's not complete
+            if ($productCount % $productsPerRow != 0) {
+                echo '</div>';
             }
         } else {
             echo '<p>No products found in category 3.</p>';

@@ -1,0 +1,31 @@
+/* Global Styles */
+body {
+    background-color: #f8f9fa; /* Background color for the entire page */
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    margin-top: 20px; /* Add margin to the container for spacing */
+}
+
+/* Header Styles */
+/* You can style your header here if needed */
+
+/* Product Card Styles */
+.card {
+    border: 1px solid #dee2e6; /* Add a border to the card */
+    border-radius: 10px; /* Rounded corners for the card */
+}
+
+.card-img-top {
+    max-height: 200px; /* Limit the height of the product image */
+    object-fit: cover; /* Maintain aspect ratio for the image */
+}
+
+/* Product Alert Styles */
+.alert {
+    margin-top: 20px; /* Add margin to the alert for spacing */
+}
+
+/* Footer Styles */
+/* You can style your footer here if needed */
