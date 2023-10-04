@@ -1,49 +1,41 @@
 <?php
-// by default setting login and error false
+session_start(); // Start the session at the beginning of the script
+
 $login = false;
 $showError = false;
-//checking if the method is post 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
-    //if method is post connect to database
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     include '../components/_dbconnect.php';
 
     $username = $_POST["username"];
     $password = $_POST["password"];
 
-    //query to fetch user data 
-    $sql = "Select * from `users_info` where username='$username'";
-    $result = mysqli_query($conn, $sql);
-    //checking number of rows of the email although it will be one if exists otherwise 0 as no duplicate entry is alowed and email is set unique
+    $sql = "SELECT * FROM `users_info` WHERE username=?";
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "s", $username);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
-    $num = mysqli_num_rows($result);
-    if ($num == 1){
-        //if email exist fetch data and verify password and start the session 
-        while($row=mysqli_fetch_assoc($result)){
-            if (password_verify($password, $row['password'])){ 
-                $login = true;
-                session_start();
-        
-                $_SESSION['loggedin'] = true;
-                $_SESSION['user_id'] = $row['user_id'];
-                $_SESSION['username']= $username;
-               
-                
-                header("location: /project/User/home.php");
-            } 
-          
-            else{
-                $showError = "Invalid password ";
-            }
+    if (mysqli_num_rows($result) == 1) {
+        $row = mysqli_fetch_assoc($result);
+        if (password_verify($password, $row['password'])) {
+            $login = true;
+            $_SESSION['loggedin'] = true;
+            $_SESSION['user_id'] = $row['user_id'];
+            $_SESSION['username'] = $username;
+            header("location: /project/User/home.php");
+            exit; // Exit to prevent further execution
+        } else {
+            $showError = "Invalid credentials";
         }
-        
-    } 
-    else{
-        $showError = "Invalid E-mail";
+    } else {
+        $showError = "Invalid credentials";
     }
-}
-    
-?>
 
+    mysqli_stmt_close($stmt);
+    mysqli_close($conn);
+}
+?>
 
 <!doctype html>
 <html lang="en">

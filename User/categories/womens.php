@@ -1,4 +1,5 @@
 <?php
+session_start();
 require '../components/_dbconnect.php';
 
 // Define the product category you want to retrieve (in this case, category 3)
@@ -7,22 +8,8 @@ $productCategory = 2;
 // Fetch products with category 3 from the database
 $sql = "SELECT * FROM products WHERE product_category = $productCategory";
 $result = mysqli_query($conn, $sql);
-
-// Handle Add to Cart and Add to Favorites actions
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST["add_to_cart"])) {
-        $productId = $_POST["product_id"];
-        // Handle adding the product to the cart (you should implement your cart logic here).
-        // Example session-based cart storage:
-        $_SESSION["cart"][$productId] = 1; // Quantity can be adjusted as needed.
-    } elseif (isset($_POST["add_to_favorites"])) {
-        $productId = $_POST["product_id"];
-        // Handle adding the product to favorites (you should implement your favorites logic here).
-        // Example session-based favorites storage:
-        $_SESSION["favorites"][$productId] = true;
-    }
-}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -40,60 +27,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </head>
 
 <body>
-    <!-- Navigation bar -->
-    <?php require '../components/_header.php'?>
+   <!-- Navigation bar -->
+   <?php require '../components/_header.php'?>
 
-    <h1 class="tittle mt-4 mb-4">Products - Category 3</h1>
-    <div class="con">
+<div class="con mt-4">
+    <h1 class="tittle mb-4">Women Section</h1>
+    <div class="box">
         <?php
         if (mysqli_num_rows($result) > 0) {
-            $productsPerRow = 3; // Define the number of products per row
-            $productCount = 0;
-
             while ($row = mysqli_fetch_assoc($result)) {
-                if ($productCount % $productsPerRow == 0) {
-                    // Start a new row
-                    echo '<div class="row">';
-                }
-
-                echo '<div class="card col-md-4 mb-3" style="max-width: 400px;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                                <img src="../../admin/' . $row['product_image'] . '" alt="' . $row['product_name'] . '" class="img-fluid">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="p_title mt-4">' . $row['product_name'] . '</h5>
-                                    <p class="card-text">Category: ' . $row['product_category'] . '</p>
-                                    <p class="card-text">Price: ' . $row['product_price'] . ' rupees</p>
-                                    <p class="card-text">Description: ' . $row['product_description'] . '</p>
-                                    <form method="post">
-                                        <input type="hidden" name="product_id" value="' . $row['product_id'] . '">
-                                        <button type="submit" name="add_to_cart" class="btn btn-primary">Add to Cart</button>
-                                        <button type="submit" name="add_to_favorites" class="btn btn-secondary">Add to Favorites</button>
-                                    </form>
+                echo '<div class=" box-inside">
+                        <div class="card mb-5 picture">
+                            <img src="../../admin/' . $row['product_image'] . '" alt="' . $row['product_name'] . '" class="card-img-top"style="height:400px;">
+                            <div class="card-body">
+                                <h5 class="p_title">' . $row['product_name'] . '</h5>
+                                <p class="card-text">Price: ' . $row['product_price'] . ' rupees</p>
+                                <p class="card-text">Available sizes: ' . $row['product_size'] . ' </p>
+                                <p class="product-description">Description:' . $row['product_description'] . '</p>
+                                <div class="d-flex">
+                                <form method="post" action="../cart.php">
+                                    <input type="hidden" name="product_id" value=" '.$row['product_id'].'">
+                                    <label for="size">Select Size:</label>
+                                    <select name="size" id="size">
+                                        <option value="35">35</option>
+                                        <option value="36">36</option>
+                                        <option value="37">37</option>
+                                        <option value="38">38</option>
+                                        <option value="39">39</option>
+                                        <option value="40">40</option>
+                                      
+                                    </select>
+                                    <button type="submit" name="add_to_cart" class="btn btn-primary me-3">Add to Cart</button>
+                                </form>
+                                    <form method="post" action="../operations/add_to_favorite.php">
+                                    <input type="hidden" name="product_id" value="' . $row['product_id'] . '">
+                                    <button type="submit" name="add_to_favorites" class="btn btn-secondary">Add to Favorites</button>
+                                </form>
                                 </div>
-                            </div>
+                                </div>
                         </div>
                     </div>';
-
-                $productCount++;
-
-                if ($productCount % $productsPerRow == 0) {
-                    // Close the row
-                    echo '</div>';
-                }
-            }
-
-            // Close the last row if it's not complete
-            if ($productCount % $productsPerRow != 0) {
-                echo '</div>';
             }
         } else {
-            echo '<p>No products found in category 3.</p>';
+            echo '<div class="col-md-12">
+                    <p class="alert alert-info">No products found in category 3.</p>
+                </div>';
         }
+
+        // Close the database connection
+        mysqli_close($conn);
         ?>
     </div>
+</div>
     <!-- Footer section -->
     <?php require '../components/_footer.php'?>
     <!-- Bootstrap core JavaScript -->

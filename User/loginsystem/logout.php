@@ -1,8 +1,11 @@
 <?php
 session_start();
-
+// Set the logout flag to true
+$_SESSION['logout'] = true;
 session_unset();
+
 session_destroy();
+
 
 header("location: login.php");
 exit;

@@ -17,7 +17,7 @@ if (isset($_GET['product_id'])) {
     if (mysqli_query($conn, $delete_sql)) {
         // Product deleted successfully
         $_SESSION['delete_success'] = true; // Set a session variable
-        header("location: ../products.php");
+        header("location: ../product_list.php");
         exit;
     } else {
         // Error deleting product
@@ -25,7 +25,7 @@ if (isset($_GET['product_id'])) {
     }
 } else {
     // Product ID not provided in the URL
-    header("location: ../products.php");
+    header("location: ../product_list.php");
     exit;
 }
 ?>

@@ -1,12 +1,20 @@
 <?php
 session_start();
-require '../components/_dbconnect.php';
+require 'components/_dbconnect.php';
 
-// Define the product category you want to retrieve (in this case, category 3)
-$productCategory = 3;
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: loginsystem/login.php"); // Redirect to login page if not logged in
+    exit();
+}
 
-// Fetch products with category 3 from the database
-$sql = "SELECT * FROM products WHERE product_category = $productCategory";
+$user_id = $_SESSION['user_id'];
+
+// Fetch favorite products for the logged-in user
+$sql = "SELECT p.* FROM products as p
+        INNER JOIN favorites as f ON p.product_id = f.product_id
+        WHERE f.user_id = $user_id";
+
 $result = mysqli_query($conn, $sql);
 ?>
 
@@ -16,9 +24,12 @@ $result = mysqli_query($conn, $sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products - Category 3</title>
+    <title>Favorite Products</title>
     <!-- Link to your custom CSS file -->
+    
+     <link rel="stylesheet" href="css/product.css">
     <link rel="stylesheet" href="../css/product.css">
+    <link rel="stylesheet" href="css/footer.css">
     <!-- Google Fonts link -->
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Roboto+Condensed:wght@300;400&family=Roboto+Serif:opsz,wght@8..144,100;8..144,400&family=Smokum&display=swap" rel="stylesheet">
     <!-- Bootstrap core CSS -->
@@ -27,43 +38,30 @@ $result = mysqli_query($conn, $sql);
 
 <body>
     <!-- Navigation bar -->
-    <?php require '../components/_header.php'?>
+    <?php require 'components/_header.php'?>
 
     <div class="con mt-4">
-        <h1 class="tittle mb-4">Kids Section</h1>
+        <h1 class="tittle mb-4">Favorite Products</h1>
         <div class="box">
             <?php
             if (mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo '<div class=" box-inside">
                             <div class="card mb-5 picture">
-                                <img src="../../admin/' . $row['product_image'] . '" alt="' . $row['product_name'] . '" class="card-img-top" style="height:400px;">
+                                <img src="../admin/' . $row['product_image'] . '" alt="' . $row['product_name'] . '" class="card-img-top">
                                 <div class="card-body">
                                     <h5 class="p_title">' . $row['product_name'] . '</h5>
                                     <p class="card-text">Price: ' . $row['product_price'] . ' rupees</p>
-                                    <p class="card-text">Available sizes: ' . $row['product_size'] . ' </p>
                                     <p class="product-description">Description:' . $row['product_description'] . '</p>
                                     <div class="d-flex">
-                                    <form method="post" action="../cart.php">
-                                    <input type="hidden" name="product_id" value=" '.$row['product_id'].'">
-                                    <label for="size">Select Size:</label>
-                                    <select name="size" id="size">
-                                        <option value="8">8</option>
-                                        <option value="9">9</option>
-                                        <option value="10">10</option>
-                                        <option value="11">11</option>
-                                        <option value="12">12</option>
-                                        <option value="13">13</option>
-                                        <option value="14">14</option>
-                                        <option value="15">15</option>
-                    
-                                    </select>
-                                    <button type="submit" name="add_to_cart" class="btn btn-primary me-3">Add to Cart</button>
-                                </form>
+                                    <form method="post" action="cart.php">
+                                        <input type="hidden" name="product_id" value="' . $row['product_id'] . '">
+                                        <button type="submit" name="add_to_cart" class="btn btn-primary me-3">Add to Cart</button>
+                                    </form>
                                     
-                                    <form method="post" action="../operations/add_to_favorite.php">
+                                    <form method="post" action="operations/remove_favorite.php">
                                     <input type="hidden" name="product_id" value="' . $row['product_id'] . '">
-                                    <button type="submit" name="add_to_favorites" class="btn btn-secondary">Add to Favorites</button>
+                                    <button type="submit" name="remove_favorites" class="btn btn-danger">Remove from Favorites</button>
                                 </form>
                                 </div>
                                 </div>
@@ -72,7 +70,7 @@ $result = mysqli_query($conn, $sql);
                 }
             } else {
                 echo '<div class="col-md-12">
-                        <p class="alert alert-info">No products found in category 3.</p>
+                        <p class="alert alert-info">No favorite products found for your account.</p>
                     </div>';
             }
 
@@ -83,7 +81,7 @@ $result = mysqli_query($conn, $sql);
     </div>
 
     <!-- Footer section -->
-    <?php require '../components/_footer.php'?>
+    <?php require 'components/_footer.php'?>
 
     <!-- Bootstrap core JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>

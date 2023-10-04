@@ -1,14 +1,12 @@
-<?php 
-if(isset($_SESSION['loggedin']) && $_SESSION['loggedin']==true){
-  $loggedin= true;
-}
-else{
-  $loggedin = false;
-}
+<?php
 
-// navigation bar starts here
 
-echo'<nav class="navbar navbar-expand-lg bg-light">
+$loggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true;
+$username = isset($_SESSION['username']) ? $_SESSION['username'] : '';
+$user_id= isset($_SESSION['user_id']) ? $_SESSION['user_id'] : '';
+
+
+echo '<nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">
         <a class="navbar-brand" href="home.php">shoes</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -26,48 +24,50 @@ echo'<nav class="navbar navbar-expand-lg bg-light">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        category
+                        Category
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="categories/mens.php">mens</a></li>
-                        <li><a class="dropdown-item" href="categories/womens.php">womens</a></li>
-
-                        <li><a class="dropdown-item" href="categories/kids.php">kids</a></li>
+                        <li><a class="dropdown-item" href="categories/mens.php">Mens</a></li>
+                        <li><a class="dropdown-item" href="categories/womens.php">Womens</a></li>
+                        <li><a class="dropdown-item" href="categories/kids.php">Kids</a></li>
                     </ul>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="reviews.php">Reviews</a>
                 </li>
-
             </ul>
             <form class="d-flex" role="search">
                 <input class="form-control me-3" type="search" placeholder="Search items" aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>';
 
-            if(!$loggedin){
-                //display login and sigup button if user is not logged in 
-
-           echo' <ul class="navbar-nav me-3 ms-3">
-                <li class="nav-item  navbar-nav me-3 ms-3">
-                    <a class="nav-link" href="loginsystem/login.php">login</a>
+if (!$loggedin) {
+    echo '<ul class="navbar-nav me-3 ms-3">
+                <li class="nav-item navbar-nav me-3 ms-3">
+                    <a class="nav-link" href="loginsystem/login.php">Login</a>
                 </li>
                 <li class="nav-item navbar-nav me-3 ms-3">
-                    <a class="nav-link" href="loginsystem/signup.php">signup</a>
-                </li>';
-            }
-            if($loggedin){
-                //display the name of user if logged in 
-                echo $_SESSION['username'];
-                echo ' <li class="nav-item navbar-nav me-3 ms-3">
-                    <a class="nav-link" href="loginsystem/logout.php">logout</a>
-                </li>';
-                };
-                echo'<li class="nav-item navbar-nav me-3 ms-3">
+                    <a class="nav-link" href="loginsystem/signup.php">Signup</a>
+                </li>
+            </ul>';
+} else {
+    echo '<ul class="navbar-nav me-3 ms-3">
+                <li class="nav-item navbar-nav me-3 ms-3">
+                    <span class="nav-link">Welcome, ' . $username . '</span>
+                </li>
+                <li class="nav-item navbar-nav me-3 ms-3">
+                    <a class="nav-link" href="loginsystem/logout.php">Logout</a>
+                </li>
+            </ul>';
+}
+
+echo ' <li class="nav-item navbar-nav me-3 ms-3">
+            <a class="nav-link" href="favorites.php">favourites</a>
+        </li>
+        <li class="nav-item navbar-nav me-3 ms-3">
                     <a class="nav-link" href="cart.php">Cart</a>
                 </li>
             </ul>
-
         </div>
     </div>
 </nav>';

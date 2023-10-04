@@ -25,12 +25,12 @@ if (isset($_GET['product_id'])) {
         $product_images = explode(',', $row['product_image']);
     } else {
         // Product not found
-        header("location: ../products.php");
+        header("location: ../product_list.php");
         exit;
     }
 } else {
     // Product ID not provided in the URL
-    header("location: ../products.php");
+    header("location: ../product_list.php");
     exit;
 }
 
@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (mysqli_query($conn, $update_sql)) {
         // Product updated successfully
         $_SESSION['edit_success'] = true; // Set a session variable for success
-        header("location: ../products.php");
+        header("location: ../product_list.php");
         exit;
     } else {
         // Error updating product
